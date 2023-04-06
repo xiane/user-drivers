@@ -1,0 +1,67 @@
+allprojects {
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
+}
+
+subprojects {
+    if (!project.findProperty("ARTIFACT_VERSION")) {
+        return
+    }
+
+    apply plugin: 'com.android.library'
+
+    task genJavadocs (type: Javadoc) {
+        source = android.sourceSets.main.java.sourceFiles
+        project.android.compileSdkVersion = 'android-' + DEFAULT_COMPILE_SDK_VERSION
+
+        configurations.compileOnly.setCanBeResolved(true)
+        classpath += configurations.compileOnly
+
+        configurations.implementation.setCanBeResolved(true)
+        classpath += configurations.implementation
+    }
+
+    task sourceJar(type: Jar) {
+        classifier = 'source'
+        from android.sourceSets.main.java.sourceFiles
+    }
+
+    task javadocJar(type: Jar, dependsOn: genJavadocs) {
+        classifier = 'javadoc'
+        from genJavadocs.destinationDir
+    }
+
+    def artifactVersion = ARTIFACT_VERSION
+
+    afterEvaluate {
+        publishing {
+            publications {
+                release(MavenPublication) {
+                    groupId = 'io.github.odroidthings'
+                    artifactId = "driver-$project.name"
+                    version artifactVersion
+                    artifact sourceJar
+                    artifact javadocJar
+                    if (project.plugins.findPlugin("com.android.library")) {
+                        from components.release
+                    } else {
+                        artifact("$buildDir/outputs/aar/$project.name-release.aar")
+                    }
+
+                    signing {
+                        sign publishing.publications
+                    }
+                }
+            }
+        }
+    }
+
+    afterEvaluate {
+        tasks.withType(PublishToMavenRepository).all { publishTask ->
+            publishTask.dependsOn build
+        }
+        tasks.withType(PublishToMavenLocal).all { publishTask ->
+            publishTask.dependsOn build
+        }
+    }
+}

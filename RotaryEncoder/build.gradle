@@ -1,0 +1,17 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion DEFAULT_COMPILE_SDK_VERSION
+
+    defaultConfig {
+        minSdkVersion DEFAULT_MIN_SDK_VERSION
+        targetSdkVersion DEFAULT_TARGET_SDK_VERSION
+    }
+}
+
+dependencies {
+    implementation 'com.android.support:support-annotations:27.1.0'
+    compileOnly 'com.google.android.things:androidthings:1.0'
+
+    testImplementation 'junit:junit:4.13.2'
+}
