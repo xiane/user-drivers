@@ -1,6 +1,9 @@
 allprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
+    if (project == rootProject) {
+        apply plugin: 'io.github.gradle-nexus.publish-plugin'
+    }
 }
 
 subprojects {
@@ -9,6 +12,16 @@ subprojects {
     }
 
     apply plugin: 'com.android.library'
+
+    nexusPublishing {
+        repositories {
+            sonatype {
+                nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+                snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+            }
+        }
+    }
+
 
     task genJavadocs (type: Javadoc) {
         source = android.sourceSets.main.java.sourceFiles
@@ -32,36 +45,56 @@ subprojects {
     }
 
     def artifactVersion = ARTIFACT_VERSION
+    def projectURL = findProperty("url")
+
+    group = "io.github.xiane"
+    version = artifactVersion
 
     afterEvaluate {
         publishing {
             publications {
                 release(MavenPublication) {
-                    groupId = 'io.github.odroidthings'
-                    artifactId = "driver-$project.name"
-                    version artifactVersion
-                    artifact sourceJar
-                    artifact javadocJar
-                    if (project.plugins.findPlugin("com.android.library")) {
-                        from components.release
-                    } else {
-                        artifact("$buildDir/outputs/aar/$project.name-release.aar")
-                    }
-
-                    signing {
-                        sign publishing.publications
+                    groupId = 'io.github.xiane'
+                        artifactId = "driver-$project.name"
+                        version artifactVersion
+                        artifact sourceJar
+                        artifact javadocJar
+                        if (project.plugins.findPlugin("com.android.library")) {
+                            from components.release
+                        } else {
+                            artifact("$buildDir/outputs/aar/$project.name-release.aar")
+                        }
+                    pom {
+                        name = "driver-$project.name"
+                            description = TYPE
+                            url = projectURL
+                            licenses {
+                                license {
+                                    name = 'The Apache License, Version 2.0'
+                                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                                }
+                            }
+                        developers {
+                            developer {
+                                id = "luke.go"
+                                    name = "Luke Go"
+                                    email = "sangch.go@gmail.com"
+                            }
+                        }
+                        scm {
+                            url = projectURL
+                                connection = "scm:${projectURL}.git"
+                                developerConnection = "scm:${projectURL}.git"
+                        }
                     }
                 }
             }
-        }
-    }
-
-    afterEvaluate {
-        tasks.withType(PublishToMavenRepository).all { publishTask ->
-            publishTask.dependsOn build
-        }
-        tasks.withType(PublishToMavenLocal).all { publishTask ->
-            publishTask.dependsOn build
+            signing {
+                def signingKey = findProperty("siginingKey")
+                    def signingPassword = findProperty("signingPassword")
+                    useInMemoryPgpKeys(signingKey, signingPassword)
+                    sign publishing.publications
+            }
         }
     }
 }
