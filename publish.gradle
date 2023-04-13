@@ -16,7 +16,8 @@ subprojects {
     nexusPublishing {
         repositories {
             sonatype {
-                //stagingProfileId = 'dc769a07a4e02'
+                def profileId = findProperty('stagingProfileId')
+                stagingProfileId = profileId
                 nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
                 snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
             }
@@ -91,9 +92,9 @@ subprojects {
                 }
             }
             signing {
-//                def signingKey = findProperty("siginingKey")
-//                    def signingPassword = findProperty("signingPassword")
-//                    useInMemoryPgpKeys(signingKey, signingPassword)
+                def signingKey = findProperty("siginingKey")
+                    def signingPassword = findProperty("signingPassword")
+                    useInMemoryPgpKeys(signingKey, signingPassword)
                     sign publishing.publications
             }
         }
