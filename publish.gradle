@@ -16,12 +16,13 @@ subprojects {
     nexusPublishing {
         repositories {
             sonatype {
+                def profileId = findProperty('stagingProfileId')
+                stagingProfileId = profileId
                 nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
                 snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
             }
         }
     }
-
 
     task genJavadocs (type: Javadoc) {
         source = android.sourceSets.main.java.sourceFiles
@@ -46,15 +47,16 @@ subprojects {
 
     def artifactVersion = ARTIFACT_VERSION
     def projectURL = findProperty("url")
+    def groupID = findProperty("groupId")
 
-    group = "io.github.xiane"
+    group = groupID
     version = artifactVersion
 
     afterEvaluate {
         publishing {
             publications {
                 release(MavenPublication) {
-                    groupId = 'io.github.xiane'
+                    groupId = groupID
                         artifactId = "driver-$project.name"
                         version artifactVersion
                         artifact sourceJar
@@ -90,7 +92,7 @@ subprojects {
                 }
             }
             signing {
-                def signingKey = findProperty("siginingKey")
+                def signingKey = findProperty("signingKey")
                     def signingPassword = findProperty("signingPassword")
                     useInMemoryPgpKeys(signingKey, signingPassword)
                     sign publishing.publications
