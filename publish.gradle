@@ -24,7 +24,6 @@ subprojects {
         }
     }
 
-
     task genJavadocs (type: Javadoc) {
         source = android.sourceSets.main.java.sourceFiles
         project.android.compileSdkVersion = 'android-' + DEFAULT_COMPILE_SDK_VERSION
@@ -48,15 +47,16 @@ subprojects {
 
     def artifactVersion = ARTIFACT_VERSION
     def projectURL = findProperty("url")
+    def groupID = findProperty("groupId")
 
-    group = "io.github.xiane"
+    group = groupID
     version = artifactVersion
 
     afterEvaluate {
         publishing {
             publications {
                 release(MavenPublication) {
-                    groupId = 'io.github.xiane'
+                    groupId = groupID
                         artifactId = "driver-$project.name"
                         version artifactVersion
                         artifact sourceJar
