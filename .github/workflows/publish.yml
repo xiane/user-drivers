@@ -57,5 +57,6 @@ jobs:
           ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
+          ORG_GRADLE_PROJECT_stagingProfileId: ${{ secrets.SONATYPE_PROFILE_ID }}
         run: |
           ./gradlew -PPUBLISHING -Purl=${{ github.server_url}}/${{ github.repository }} ${{ needs.Tag.outputs.device }}:publishToSonatype --no-daemon
