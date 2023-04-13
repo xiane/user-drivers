@@ -16,6 +16,7 @@ subprojects {
     nexusPublishing {
         repositories {
             sonatype {
+                stagingProfileId = 'dc769a07a4e02'
                 nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
                 snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
             }
@@ -53,7 +54,7 @@ subprojects {
     afterEvaluate {
         publishing {
             publications {
-                mavenJava(MavenPublication) {
+                release(MavenPublication) {
                     groupId = 'io.github.xiane'
                         artifactId = "driver-$project.name"
                         version artifactVersion

@@ -33,7 +33,7 @@ jobs:
 
       - name: build aar
         run: |
-          ./gradlew ${{ needs.Tag.outputs.device }}:assembleRelease
+          ./gradlew ${{ needs.Tag.outputs.device }}:assembleRelease --no-daemon
 
   Publish:
     name: Publish Artifacts
