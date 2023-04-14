@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="hardkernel.odroid.things.user.driver.rotaryencoder">
+    package="com.hardkernel.odroid.things.contrib.RotaryEncoder">
     <application>
         <uses-library android:required="false" android:name="com.google.android.things"/>
     </application>

@@ -1,4 +1,4 @@
-package hardkernel.odroid.rotaryencoder;
+package com.hardkernel.odroid.things.contrib.RotaryEncoder;
 
 import org.junit.Test;
 

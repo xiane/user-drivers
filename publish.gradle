@@ -68,7 +68,7 @@ subprojects {
                         }
                     pom {
                         name = "driver-$project.name"
-                            description = TYPE
+                            description = "driver-$project.name"
                             url = projectURL
                             licenses {
                                 license {

@@ -1,4 +1,4 @@
-package hardkernel.odroid.things.user.driver.rotaryencoder;
+package com.hardkernel.odroid.things.contrib.RotaryEncoder;
 
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.GpioCallback;
@@ -33,11 +33,10 @@ public class IncrementalRotaryEncoder implements AutoCloseable {
      * @param swName GPIO pin for sw. You can control callback with registerSwitch / unregisterSwitch.
      * @param clkName GPIO pin for sw.
      * @param rotaryListener method interface stuffs for cw / ccw.
-     * @throws IOException Exception About android things configuration.
-     * @throws IllegalArgumentException
+     * @throws IOException Exception about wrong GPIO pin name.
      */
     public IncrementalRotaryEncoder(String dtName, String swName, String clkName,
-                                    RotaryListener rotaryListener) throws IOException, IllegalArgumentException  {
+                                    RotaryListener rotaryListener) throws IOException  {
         mListener = rotaryListener;
 
         PeripheralManager manager = PeripheralManager.getInstance();
@@ -46,13 +45,18 @@ public class IncrementalRotaryEncoder implements AutoCloseable {
         mSwitch = manager.openGpio(swName);
         mClock = manager.openGpio(clkName);
 
-        dt.setDirection(Gpio.DIRECTION_IN);
-        mSwitch.setDirection(Gpio.DIRECTION_IN);
-        mClock.setDirection(Gpio.DIRECTION_IN);
+        try {
+            dt.setDirection(Gpio.DIRECTION_IN);
+            mClock.setDirection(Gpio.DIRECTION_IN);
+            mSwitch.setDirection(Gpio.DIRECTION_IN);
+            mSwitch.setEdgeTriggerType(Gpio.EDGE_FALLING);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * Register Gpio Callback for sw input.
+     * Register Switch input Gpio callback.
      * @param callback GPIO Callback for sw.
      * @throws IOException it called from registering or already registered callback.
      */
@@ -76,7 +80,7 @@ public class IncrementalRotaryEncoder implements AutoCloseable {
 
     /**
      * Start listening for RotaryListener's cw and ccw work.
-     * @throws IOException
+     * @throws IOException Error about gpio getValue
      */
     public void startEncoder() throws IOException {
         boolean cur_clk, cur_dt;
@@ -101,6 +105,9 @@ public class IncrementalRotaryEncoder implements AutoCloseable {
         }
     }
 
+    /**
+     * Stop listening for RotaryListener's works.
+     */
     public void stopEncoder() {
         mDoLoop = false;
     }
