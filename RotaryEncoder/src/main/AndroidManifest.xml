@@ -11,8 +11,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hardkernel.odroid.things.contrib.RotaryEncoder">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
         <uses-library android:required="false" android:name="com.google.android.things"/>
     </application>
