@@ -6,8 +6,6 @@ allprojects {
     }
 }
 
-String sonatypeName = 'sonatype'
-
 subprojects {
     if (!project.findProperty("ARTIFACT_VERSION")) {
         return
@@ -15,13 +13,17 @@ subprojects {
 
     apply plugin: 'com.android.library'
 
-    nexusPublishing.repositories {
-            "${sonatypeName}.${project.name}" {
+    def targetProject = findProperty "target"
+
+    if ("${project.name}" == targetProject) {
+        nexusPublishing.repositories {
+            sonatype {
                 def profileId = findProperty('stagingProfileId')
                 stagingProfileId = profileId
                 nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
                 snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
             }
+        }
     }
 
     task genJavadocs (type: Javadoc) {

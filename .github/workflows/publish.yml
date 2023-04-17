@@ -65,4 +65,4 @@ jobs:
             # gpg key password
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          ./gradlew -PPUBLISHING -Purl=${{ github.server_url}}/${{ github.repository }} -PgroupId=${{ secrets.SONATYPE_GROUP_ID }} ${{ needs.Tag.outputs.device }}:publishToSonatype.${{ needs.Tag.outputs.device }} --no-daemon
+          ./gradlew -PPUBLISHING -Purl=${{ github.server_url}}/${{ github.repository }} -PgroupId=${{ secrets.SONATYPE_GROUP_ID }} -Ptarget=${{ needs.Tag.outputs.device }} ${{ needs.Tag.outputs.device }}:publishToSonatype --no-daemon
