@@ -26,7 +26,7 @@ android {
         targetSdkVersion DEFAULT_TARGET_SDK_VERSION
     }
 
-    namespace 'com.hardkernel.odroid.things.contrib.RotaryEncoder'
+    namespace 'com.hardkernel.odroid.things.contrib.Eeprom'
 }
 
 dependencies {

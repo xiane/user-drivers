@@ -13,8 +13,10 @@ subprojects {
 
     apply plugin: 'com.android.library'
 
-    nexusPublishing {
-        repositories {
+    def targetProject = findProperty "target"
+
+    if ("${project.name}" == targetProject) {
+        nexusPublishing.repositories {
             sonatype {
                 def profileId = findProperty('stagingProfileId')
                 stagingProfileId = profileId
