@@ -29,9 +29,13 @@ import java.util.List;
  * Basic Driver for I2c based AT24C series.
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class at24c {
-    protected long wait_time;
-    private int byte_length;
+public class at24c implements AutoCloseable {
+
+    /**
+     * delay time to read/write.
+     */
+    protected long wait_time = 0;
+    private final int byte_length;
     protected byte wr_buffer_size;
 
     protected I2cDevice i2c;
@@ -81,11 +85,11 @@ public class at24c {
           i2c name format - I2C-#, and n2/c4 have I2C-1 and I2C-2.
           In this case use given bus. if given bus is not in list, use default one.
          */
-        List<String> i2cBuslist = manager.getI2cBusList();
-        if(i2cBuslist.contains(i2cBus))
+        List<String> i2cBusList = manager.getI2cBusList();
+        if(i2cBusList.contains(i2cBus))
             i2c = manager.openI2cDevice(i2cBus, bus_address);
         else
-            i2c = manager.openI2cDevice(i2cBuslist.get(0), bus_address);
+            i2c = manager.openI2cDevice(i2cBusList.get(0), bus_address);
         byte_length = size;
         read_only = false;
     }
@@ -160,5 +164,14 @@ public class at24c {
             throws InterruptedException, IOException {
         i2c.writeRegBuffer(offset, val, size);
         sleep(wait_time);
+    }
+
+    /**
+     * close at24c device driver to control.
+     * @throws IOException I2c bus command exception.
+     */
+    @Override
+    public void close() throws IOException {
+        i2c.close();
     }
 }
