@@ -1,2 +1,3 @@
-include ':RotaryEncoder'
 include ':Eeprom'
+include ':Lcd'
+include ':RotaryEncoder'
