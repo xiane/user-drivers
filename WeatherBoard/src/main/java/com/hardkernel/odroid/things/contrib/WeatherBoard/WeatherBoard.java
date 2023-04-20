@@ -17,8 +17,8 @@
 package com.hardkernel.odroid.things.contrib.WeatherBoard;
 
 import com.google.android.things.pio.PeripheralManager;
-import com.hardkernel.odroid.things.contrib.Bme280;
-import com.hardkernel.odroid.things.contrib.Si1132;
+import com.hardkernel.odroid.things.contrib.Bme280.Bme280;
+import com.hardkernel.odroid.things.contrib.Si1132.Si1132;
 
 import java.util.List;
 
@@ -32,11 +32,11 @@ public class WeatherBoard implements AutoCloseable {
     /**
      *  UV, Visible, IR
      */
-    private SI1132 si1132;
+    private Si1132 si1132;
     /**
      *  Temperature, Humidity, Pressure, Altitude
      */
-    private BME280 bme280;
+    private Bme280 bme280;
 
     /**
      * Create Weather board instance.
@@ -61,10 +61,10 @@ public class WeatherBoard implements AutoCloseable {
             else
                 i2cBusName = i2cList.get(0);
 
-            si1132 = new SI1132(i2cBusName);
-            bme280 = new BME280(i2cBusName,
-                    BME280.POWER_MODE.NORMAL,
-                    BME280.OVERSAMPLING.X2, BME280.OVERSAMPLING.X2, BME280.OVERSAMPLING.X2);
+            si1132 = new Si1132(i2cBusName);
+            bme280 = new Bme280(i2cBusName,
+                    Bme280.POWER_MODE.NORMAL,
+                    Bme280.OVERSAMPLING.X2, Bme280.OVERSAMPLING.X2, Bme280.OVERSAMPLING.X2);
         } catch (Exception e) {
             e.printStackTrace();
         }
