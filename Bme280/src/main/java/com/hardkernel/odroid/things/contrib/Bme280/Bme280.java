@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.hardkernel.odroid.things.contrib.WeatherBoard;
+package com.hardkernel.odroid.things.contrib.Bme280;
 
 import com.google.android.things.pio.I2cDevice;
 import com.google.android.things.pio.PeripheralManager;
@@ -22,15 +22,15 @@ import com.google.android.things.pio.PeripheralManager;
 import java.io.IOException;
 
 /**
- * BME280 Userland Driver. sensor for temperature, pressure and humidity.
+ * Bme280 Userland Driver. sensor for temperature, pressure and humidity.
  * The Driver support I2C connection. But will be support spi 3wire mode.
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class BME280 implements AutoCloseable {
+public class Bme280 implements AutoCloseable {
     private final I2cDevice device;
 
     /**
-     * BME280 chip's I2C Address.
+     * Bme280 chip's I2C Address.
      */
     public static final byte ADDRESS = 0x76;
 
@@ -87,7 +87,7 @@ public class BME280 implements AutoCloseable {
     }
 
     /**
-     * Register addresses for BME280.
+     * Register addresses for Bme280.
      */
     protected static class reg {
         final static byte CHIP_ID = (byte) 0xD0;
@@ -255,7 +255,7 @@ public class BME280 implements AutoCloseable {
     private final calibration_param param;
 
     /**
-     * Create BME280 instance and initialize with parameters.
+     * Create Bme280 instance and initialize with parameters.
      * @param i2cBusName android things i2c target bus name.
      * @param powerMode power mode on initialize sequence. recommended to NORMAL.
      * @param hSampling humidity oversampling rate.
@@ -265,7 +265,7 @@ public class BME280 implements AutoCloseable {
      * @throws IllegalAccessException chip id is incorrect.
      * @throws InterruptedException caused from sleep.
      */
-    public BME280(String i2cBusName,
+    public Bme280(String i2cBusName,
                   byte powerMode, byte hSampling, byte pSampling, byte tSampling)
             throws IOException, IllegalAccessException, InterruptedException {
         PeripheralManager manager = PeripheralManager.getInstance();
@@ -309,7 +309,7 @@ public class BME280 implements AutoCloseable {
 
     /**
      * Set power mode.
-     * Please use BME280.POWER_MODE values.
+     * Please use Bme280.POWER_MODE values.
      * SLEEP, FORCE, NORMAL.
      * @param powerMode SLEEP or FORCE or NORMAL
      * @throws IOException caused from i2c procedure.
@@ -336,7 +336,7 @@ public class BME280 implements AutoCloseable {
 
     /**
      * Set humidity oversampling.
-     * Please use BME280.OVERSAMPLING values.
+     * Please use Bme280.OVERSAMPLING values.
      * @param sampling oversampling value.
      * @throws IOException caused from i2c procedure.
      * @throws InterruptedException caused from sleep.
@@ -359,7 +359,7 @@ public class BME280 implements AutoCloseable {
 
     /**
      * Set pressure oversampling.
-     * Please use BME280.OVERSAMPLING values.
+     * Please use Bme280.OVERSAMPLING values.
      * @param sampling oversampling value.
      * @throws IOException caused from i2c procedure.
      * @throws InterruptedException caused from sleep.
@@ -382,7 +382,7 @@ public class BME280 implements AutoCloseable {
 
     /**
      * Set temperature oversampling.
-     * Please use BME280.OVERSAMPLING values.
+     * Please use Bme280.OVERSAMPLING values.
      * @param sampling oversampling value.
      * @throws IOException caused from i2c procedure.
      * @throws InterruptedException caused from sleep.
@@ -420,7 +420,7 @@ public class BME280 implements AutoCloseable {
 
     /**
      * Control inactive duration standby time in normal mode.
-     * It must be called when SLEEP MODE. Please use BME280.STANDBY_DURATION values.
+     * It must be called when SLEEP MODE. Please use Bme280.STANDBY_DURATION values.
      * @param duration standby time.
      * @throws IOException caused from i2c procedure.
      * @throws IllegalArgumentException it must be called when SLEEP MODE.
@@ -436,7 +436,7 @@ public class BME280 implements AutoCloseable {
 
     /**
      *  Controls the time constant of the IIR filter.
-     * It must be called when SLEEP MODE. Please use BME280.FILTER values.
+     * It must be called when SLEEP MODE. Please use Bme280.FILTER values.
      * @param coefficient filtering coefficient.
      * @throws IOException caused from i2c procedure.
      * @throws IllegalArgumentException it must be called when SLEEP MODE.

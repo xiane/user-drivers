@@ -1,4 +1,6 @@
+include ':Bme280'
 include ':Eeprom'
 include ':Lcd'
 include ':RotaryEncoder'
 include ':WeatherBoard'
+include 'Si1132'

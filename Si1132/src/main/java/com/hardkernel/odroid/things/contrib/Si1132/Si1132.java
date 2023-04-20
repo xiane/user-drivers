@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.hardkernel.odroid.things.contrib.WeatherBoard;
+package com.hardkernel.odroid.things.contrib.Si1132;
 
 import com.google.android.things.pio.I2cDevice;
 import com.google.android.things.pio.PeripheralManager;
@@ -26,7 +26,7 @@ import java.io.IOException;
  * The Device support I2C connection.
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class SI1132 implements AutoCloseable {
+public class Si1132 implements AutoCloseable {
     private final I2cDevice device;
 
     /**
@@ -142,7 +142,7 @@ public class SI1132 implements AutoCloseable {
      * @throws IOException caused from i2c procedure.
      * @throws InterruptedException caused from sleep.
      */
-    public SI1132(String i2cBusName)
+    public Si1132(String i2cBusName)
             throws IOException, InterruptedException {
         PeripheralManager manager = PeripheralManager.getInstance();
         device = manager.openI2cDevice(i2cBusName, ADDRESS);
