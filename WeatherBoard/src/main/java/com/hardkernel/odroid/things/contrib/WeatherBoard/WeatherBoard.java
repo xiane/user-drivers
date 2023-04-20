@@ -17,6 +17,8 @@
 package com.hardkernel.odroid.things.contrib.WeatherBoard;
 
 import com.google.android.things.pio.PeripheralManager;
+import com.hardkernel.odroid.things.contrib.Bme280;
+import com.hardkernel.odroid.things.contrib.Si1132;
 
 import java.util.List;
 
