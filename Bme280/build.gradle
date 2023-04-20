@@ -26,13 +26,11 @@ android {
         targetSdkVersion DEFAULT_TARGET_SDK_VERSION
     }
 
-    namespace 'com.hardkernel.odroid.things.contrib.WeatherBoard'
+    namespace 'com.hardkernel.odroid.things.contrib.Bme280'
 }
 
 dependencies {
     compileOnly 'com.google.android.things:androidthings:1.0'
-    api 'com.hardkernel:driver-Bme280:0.5'
-    api 'com.hardkernel:driver-Si1132:0.5'
 
     testImplementation 'junit:junit:4.13.2'
 }
