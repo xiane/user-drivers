@@ -14,9 +14,9 @@ jobs:
       version: ${{ steps.vesion.outputs.number }}
     steps:
       - id: device
-        run: echo "::set-output name=device::$(echo ${{ github.ref_name }} | cut -d'/' -f1)"
+        run: echo "device=$(echo ${{ github.ref_name }} | cut -d'/' -f1)" >> $GITHUB_OUTPUT
       - id: version
-        run: echo "::set-output name=number::$(echo ${{ github.ref_name }} | cut -d'v' -f2)"
+        run: echo "number=$(echo ${{ github.ref_name }} | cut -d'v' -f2)" >> $GITHUB_OUTPUT
 
           #  Build:
           #    runs-on: ubuntu-latest
