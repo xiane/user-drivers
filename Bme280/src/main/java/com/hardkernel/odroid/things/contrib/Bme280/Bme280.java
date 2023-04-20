@@ -42,33 +42,33 @@ public class Bme280 implements AutoCloseable {
      * SOFT_RESET_CODE is used to software reset.
      */
     public static class POWER_MODE{
-        final static byte SLEEP = 0b00;
-        final static byte FORCE = 0b01;
-        final static byte NORMAL = 0b11;
-        final static byte SOFT_RESET_CODE = (byte) 0xB6;
+        public final static byte SLEEP = 0b00;
+        public final static byte FORCE = 0b01;
+        public final static byte NORMAL = 0b11;
+        public final static byte SOFT_RESET_CODE = (byte) 0xB6;
     }
 
     /**
      * Oversampling value for temperature, pressure and humidity.
      */
     public static class OVERSAMPLING {
-        final static byte SKIP = 0b000;
-        final static byte X1 = 0b001;
-        final static byte X2 = 0b010;
-        final static byte X4 = 0b011;
-        final static byte X8 = 0b100;
-        final static byte X16 = 0b101;
+        public final static byte SKIP = 0b000;
+        public final static byte X1 = 0b001;
+        public final static byte X2 = 0b010;
+        public final static byte X4 = 0b011;
+        public final static byte X8 = 0b100;
+        public final static byte X16 = 0b101;
     }
 
     /**
      * IIR filter coefficient value.
      */
     public static class FILTER {
-        final static byte OFF = 0b00;
-        final static byte C2 = 0b001;
-        final static byte C4 = 0b010;
-        final static byte C8 = 0b011;
-        final static byte C16 = 0b100;
+        public final static byte OFF = 0b00;
+        public final static byte C2 = 0b001;
+        public final static byte C4 = 0b010;
+        public final static byte C8 = 0b011;
+        public final static byte C16 = 0b100;
     }
 
     /**
@@ -76,14 +76,14 @@ public class Bme280 implements AutoCloseable {
      * value[ms]. ex) D0_5 - 0.5ms, D10 - 10ms
      */
     public static class STANDBY_DURATION {
-        final static byte D0_5 = 0b000;
-        final static byte D10 = 0b110;
-        final static byte D20 = 0b0111;
-        final static byte D62_5 = 0b001;
-        final static byte D125 = 0b010;
-        final static byte D250 = 0b011;
-        final static byte D500 = 0b100;
-        final static byte D1000 = 0b101;
+        public final static byte D0_5 = 0b000;
+        public final static byte D10 = 0b110;
+        public final static byte D20 = 0b0111;
+        public final static byte D62_5 = 0b001;
+        public final static byte D125 = 0b010;
+        public final static byte D250 = 0b011;
+        public final static byte D500 = 0b100;
+        public final static byte D1000 = 0b101;
     }
 
     /**

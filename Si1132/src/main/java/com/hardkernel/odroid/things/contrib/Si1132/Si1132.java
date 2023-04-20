@@ -85,7 +85,7 @@ public class Si1132 implements AutoCloseable {
             public static final byte IR_RANGE = 0x20;
         }
 
-        static class ADCCOUNTER {
+        public static class ADCCOUNTER {
             public static final byte CLK1 = 0x0;
             public static final byte CLK7 = 0x10;
             public static final byte CLK15 = 0x20;
