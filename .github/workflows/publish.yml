@@ -35,11 +35,6 @@ jobs:
           java-version: '11'
           cache: 'gradle'
 
-      # Temp until DNS recovery.
-      - name: Add hosts to /etc/hosts
-        run: |
-          sudo echo "146.75.124.215 repo.maven.apache.org" | sudo tee -a /etc/hosts
-
       - name: Publish to maven Repo with Gradle
         env:
             # sonatype id/pwd
