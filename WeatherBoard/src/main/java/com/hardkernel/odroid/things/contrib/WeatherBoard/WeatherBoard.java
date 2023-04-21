@@ -62,7 +62,7 @@ public class WeatherBoard implements AutoCloseable {
                 i2cBusName = i2cList.get(0);
 
             si1132 = new Si1132(i2cBusName);
-            bmx280 = new Bmx280(i2cBusName);
+            bmx280 = new Bmx280(i2cBusName, 0x76);
 
             bmx280.setTemperatureOversampling(Bmx280.OVERSAMPLING_1X);
             bmx280.setHumidityOversampling(Bmx280.OVERSAMPLING_1X);
