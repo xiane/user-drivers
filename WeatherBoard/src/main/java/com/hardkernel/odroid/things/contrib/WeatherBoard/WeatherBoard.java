@@ -17,7 +17,7 @@
 package com.hardkernel.odroid.things.contrib.WeatherBoard;
 
 import com.google.android.things.pio.PeripheralManager;
-import com.hardkernel.odroid.things.contrib.Bme280.Bme280;
+import com.google.android.things.contrib.driver.bmx280.Bmx280;
 import com.hardkernel.odroid.things.contrib.Si1132.Si1132;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class WeatherBoard implements AutoCloseable {
     /**
      *  Temperature, Humidity, Pressure, Altitude
      */
-    private Bme280 bme280;
+    private Bmx280 bmx280;
 
     /**
      * Create Weather board instance.
@@ -62,9 +62,12 @@ public class WeatherBoard implements AutoCloseable {
                 i2cBusName = i2cList.get(0);
 
             si1132 = new Si1132(i2cBusName);
-            bme280 = new Bme280(i2cBusName,
-                    Bme280.POWER_MODE.NORMAL,
-                    Bme280.OVERSAMPLING.X2, Bme280.OVERSAMPLING.X2, Bme280.OVERSAMPLING.X2);
+            bmx280 = new Bmx280(i2cBusName);
+
+            bmx280.setTemperatureOversampling(Bmx280.OVERSAMPLING_1X);
+            bmx280.setHumidityOversampling(Bmx280.OVERSAMPLING_1X);
+            bmx280.setPressureOversampling(Bmx280.OVERSAMPLING_1X);
+            bmx280.setMode(Bmx280.MODE_NORMAL);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,7 +106,7 @@ public class WeatherBoard implements AutoCloseable {
      * @throws Exception IOException.
      */
     public double readHumidity() throws Exception {
-        return bme280.readHumidity();
+        return bmx280.readHumidity();
     }
 
     /**
@@ -112,7 +115,7 @@ public class WeatherBoard implements AutoCloseable {
      * @throws Exception IOException.
      */
     public double readTemperatureC() throws Exception {
-        return bme280.readTemperatureC();
+        return bmx280.readTemperature();
     }
 
     /**
@@ -121,7 +124,7 @@ public class WeatherBoard implements AutoCloseable {
      * @throws Exception IOException.
      */
     public double readTemperatureF() throws Exception {
-        return bme280.readTemperatureF();
+        return bmx280.readTemperature() * 1.8 + 32;
     }
 
     /**
@@ -130,7 +133,7 @@ public class WeatherBoard implements AutoCloseable {
      * @throws Exception IOException.
      */
     public double readPressure() throws Exception {
-        return bme280.readPressure();
+        return bmx280.readPressure();
     }
 
     /**
@@ -150,6 +153,6 @@ public class WeatherBoard implements AutoCloseable {
     @Override
     public void close() throws Exception {
         si1132.close();
-        bme280.close();
+        bmx280.close();
     }
 }

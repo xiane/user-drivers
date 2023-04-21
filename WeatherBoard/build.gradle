@@ -31,7 +31,7 @@ android {
 
 dependencies {
     compileOnly 'com.google.android.things:androidthings:1.0'
-    api 'com.hardkernel:driver-Bme280:0.5.1'
+    api 'com.google.android.things.contrib:driver-bmx280:1.0'
     api 'com.hardkernel:driver-Si1132:0.5.1'
 
     testImplementation 'junit:junit:4.13.2'
