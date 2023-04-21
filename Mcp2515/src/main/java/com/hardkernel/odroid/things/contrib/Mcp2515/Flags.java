@@ -16,6 +16,9 @@
 
 package com.hardkernel.odroid.things.contrib.Mcp2515;
 
+/**
+ * Flags for control and check state Mcp2515.
+ */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Flags {
     public static final byte STATUS_RCV_BUFF_0_FULL = (byte)0x01;

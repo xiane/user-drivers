@@ -36,6 +36,8 @@ subprojects {
         configurations.implementation.setCanBeResolved(true)
         classpath += configurations.implementation
 
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+
         android.libraryVariants.all { variant ->
             if (variant.name == 'release') {
                 owner.classpath += variant.javaCompileProvider.get().classpath

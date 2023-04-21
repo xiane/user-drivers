@@ -27,7 +27,6 @@ import com.google.android.things.pio.SpiDevice;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-
 /**
  * Mcp2515 userland driver to communicate with CAN Bus over the SPI interface and GPIO.
  */

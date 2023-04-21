@@ -16,6 +16,9 @@
 
 package com.hardkernel.odroid.things.contrib.Mcp2515;
 
+/**
+ * Commands for control Mcp2515.
+ */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Commands {
     public static final byte RESET = (byte)0xC0;
@@ -44,5 +47,4 @@ public class Commands {
     public static final byte RTS_BUFFER_0 = (byte)0x81;
     public static final byte RTS_BUFFER_1 = (byte)0x82;
     public static final byte RTS_BUFFER_2 = (byte)0x84;
-
 }

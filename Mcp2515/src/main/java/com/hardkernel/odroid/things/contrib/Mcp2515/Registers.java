@@ -16,6 +16,9 @@
 
 package com.hardkernel.odroid.things.contrib.Mcp2515;
 
+/**
+ * Register address set of Mcp2515.
+ */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Registers {
     public static final byte CANCTRL = (byte)0x0F;

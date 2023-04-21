@@ -18,12 +18,21 @@ package com.hardkernel.odroid.things.contrib.Mcp2515;
 
 import java.nio.ByteBuffer;
 
+/**
+ * CAN message structure.
+ */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class CanMessage {
     private long id;
     private ByteBuffer data;
     private boolean isRtr;
 
+    /**
+     * Create CAN message.
+     * @param id
+     * @param isRtr
+     * @param data
+     */
     public CanMessage(long id, boolean isRtr, ByteBuffer data){
         this.data = data;
         this.id = id;
