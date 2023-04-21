@@ -16,6 +16,8 @@
 
 package com.hardkernel.odroid.things.contrib.Bme280;
 
+import android.support.annotation.VisibleForTesting;
+
 import com.google.android.things.pio.I2cDevice;
 import com.google.android.things.pio.PeripheralManager;
 
@@ -164,10 +166,10 @@ public class Bme280 implements AutoCloseable {
     /**
      * calibration parameters.
      */
-    protected class calibration_param {
-        int[] dig_T;
-        int[] dig_P;
-        int[] dig_H;
+    protected static class calibration_param {
+        private int[] dig_T;
+        private int[] dig_P;
+        private int[] dig_H;
 
         int  t_fine;
 
@@ -185,57 +187,57 @@ public class Bme280 implements AutoCloseable {
 
             device.readRegBuffer(cali_reg.temperature.T1_LSB, params, 26);
 
-            param.dig_T[0] = ((params[1] & 0xFF) << 8) | (params[0] & 0xFF);
-            param.dig_T[1] = ((params[3] & 0xFF) << 8) | (params[2] & 0xFF);
-            if (param.dig_T[1] > 0x7FFF)
-                param.dig_T[1] -= 0x10000;
-            param.dig_T[2] = ((params[5] & 0xFF) << 8) | (params[4] & 0xFF);
-            if (param.dig_T[2] > 0x7FFF)
-                param.dig_T[2] -= 0x10000;
+            dig_T[0] = ((params[1] & 0xFF) << 8) | (params[0] & 0xFF);
+            dig_T[1] = ((params[3] & 0xFF) << 8) | (params[2] & 0xFF);
+            if (dig_T[1] > 0x7FFF)
+                dig_T[1] -= 0x10000;
+            dig_T[2] = ((params[5] & 0xFF) << 8) | (params[4] & 0xFF);
+            if (dig_T[2] > 0x7FFF)
+                dig_T[2] -= 0x10000;
 
-            param.dig_P[0] = ((params[7] & 0xFF) << 8) | (params[6] & 0xFF);
-            param.dig_P[1] = ((params[9] & 0xFF) << 8) | (params[8] & 0xFF);
-            if (param.dig_P[1] > 0x7FFF)
-                param.dig_P[1] -= 0x10000;
-            param.dig_P[2] = ((params[11] & 0xFF) << 8) | (params[10] & 0xFF);
-            if (param.dig_P[2] > 0x7FFF)
-                param.dig_P[2] -= 0x10000;
-            param.dig_P[3] = ((params[13] & 0xFF) << 8) | (params[12] & 0xFF);
-            if (param.dig_P[3] > 0x7FFF)
-                param.dig_P[3] -= 0x10000;
-            param.dig_P[4] = ((params[15] & 0xFF) << 8) | (params[14] & 0xFF);
-            if (param.dig_P[4] > 0x7FFF)
-                param.dig_P[4] -= 0x10000;
-            param.dig_P[5] = ((params[17] & 0xFF) << 8) | (params[16] & 0xFF);
-            if (param.dig_P[5] > 0x7FFF)
-                param.dig_P[5] -= 0x10000;
-            param.dig_P[6] = ((params[19] & 0xFF) << 8) | (params[18] & 0xFF);
-            if (param.dig_P[6] > 0x7FFF)
-                param.dig_P[6] -= 0x10000;
-            param.dig_P[7] = ((params[21] & 0xFF) << 8) | (params[20] & 0xFF);
-            if (param.dig_P[7] > 0x7FFF)
-                param.dig_P[7] -= 0x10000;
-            param.dig_P[8] = ((params[23] & 0xFF) << 8) | (params[22] & 0xFF);
-            if (param.dig_P[8] > 0x7FFF)
-                param.dig_P[8] -= 0x10000;
+            dig_P[0] = ((params[7] & 0xFF) << 8) | (params[6] & 0xFF);
+            dig_P[1] = ((params[9] & 0xFF) << 8) | (params[8] & 0xFF);
+            if (dig_P[1] > 0x7FFF)
+                dig_P[1] -= 0x10000;
+            dig_P[2] = ((params[11] & 0xFF) << 8) | (params[10] & 0xFF);
+            if (dig_P[2] > 0x7FFF)
+                dig_P[2] -= 0x10000;
+            dig_P[3] = ((params[13] & 0xFF) << 8) | (params[12] & 0xFF);
+            if (dig_P[3] > 0x7FFF)
+                dig_P[3] -= 0x10000;
+            dig_P[4] = ((params[15] & 0xFF) << 8) | (params[14] & 0xFF);
+            if (dig_P[4] > 0x7FFF)
+                dig_P[4] -= 0x10000;
+            dig_P[5] = ((params[17] & 0xFF) << 8) | (params[16] & 0xFF);
+            if (dig_P[5] > 0x7FFF)
+                dig_P[5] -= 0x10000;
+            dig_P[6] = ((params[19] & 0xFF) << 8) | (params[18] & 0xFF);
+            if (dig_P[6] > 0x7FFF)
+                dig_P[6] -= 0x10000;
+            dig_P[7] = ((params[21] & 0xFF) << 8) | (params[20] & 0xFF);
+            if (dig_P[7] > 0x7FFF)
+                dig_P[7] -= 0x10000;
+            dig_P[8] = ((params[23] & 0xFF) << 8) | (params[22] & 0xFF);
+            if (dig_P[8] > 0x7FFF)
+                dig_P[8] -= 0x10000;
 
-            param.dig_H[0] = params[25] & 0xFF;
+            dig_H[0] = params[25] & 0xFF;
 
             params = new byte[7];
             device.readRegBuffer(cali_reg.humidity.H2_LSB, params,7);
-            param.dig_H[1] = (params[1] & 0xFF << 8 | params[0] & 0xFF);
-            if (param.dig_H[1] > 0x7FFF)
-                param.dig_H[1] -= 0x10000;
-            param.dig_H[2] = (params[2] & 0xFF);
-            param.dig_H[3] = ((params[3] & 0xFF) << 4) | (params[4] & 0x0F);
-            if (param.dig_H[3] > 0x7FF)
-                param.dig_H[3] -= 0x1000;
-            param.dig_H[4] = ((params[5] & 0xFF) << 4) | ((params[4] & 0xFF) >> 4);
-            if (param.dig_H[4] > 0x7FF)
-                param.dig_H[4] -= 0x1000;
-            param.dig_H[5] = params[6] & 0xFF;
-            if (param.dig_H[5] > 127)
-                param.dig_H[5] -= 256;
+            dig_H[1] = (params[1] & 0xFF << 8 | params[0] & 0xFF);
+            if (dig_H[1] > 0x7FFF)
+                dig_H[1] -= 0x10000;
+            dig_H[2] = (params[2] & 0xFF);
+            dig_H[3] = ((params[3] & 0xFF) << 4) | (params[4] & 0x0F);
+            if (dig_H[3] > 0x7FF)
+                dig_H[3] -= 0x1000;
+            dig_H[4] = ((params[5] & 0xFF) << 4) | ((params[4] & 0xFF) >> 4);
+            if (dig_H[4] > 0x7FF)
+                dig_H[4] -= 0x1000;
+            dig_H[5] = params[6] & 0xFF;
+            if (dig_H[5] > 127)
+                dig_H[5] -= 256;
         }
 
         /**
@@ -252,7 +254,7 @@ public class Bme280 implements AutoCloseable {
     private byte ctrl_meas_reg = 0x0;
     private byte ctrl_hum_reg = 0x0;
 
-    private final calibration_param param;
+    private calibration_param param;
 
     /**
      * Create Bme280 instance and initialize with parameters.
@@ -276,6 +278,22 @@ public class Bme280 implements AutoCloseable {
 
         // First call to set t_fine value.
         readTemperatureC();
+    }
+
+    /**
+     * create a new driver for a Bme280 peripheral from a given I2C device.
+     * @param device
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws IllegalAccessException
+     */
+    @VisibleForTesting
+    /*package*/ Bme280(I2cDevice device) throws IOException, InterruptedException, IllegalAccessException {
+        this.device = device;
+        param = new calibration_param(device);
+
+        initialize(POWER_MODE.NORMAL,
+                OVERSAMPLING.X2, OVERSAMPLING.X2, OVERSAMPLING.X2);
     }
 
     private void initialize(byte powerMode, byte hSampling, byte pSampling, byte tSampling)
