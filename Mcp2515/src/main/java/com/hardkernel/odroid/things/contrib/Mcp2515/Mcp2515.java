@@ -29,6 +29,10 @@ import java.nio.ByteBuffer;
 
 /**
  * Mcp2515 userland driver to communicate with CAN Bus over the SPI interface and GPIO.
+ * Configuration set:
+ *   SPI - 10 MHz, Mode 0
+ *   CAN Oscillator - 16 MHz
+ *   CAN baud rate - 1Mb/s
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Mcp2515 implements AutoCloseable {
