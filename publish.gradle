@@ -26,35 +26,44 @@ subprojects {
         }
     }
 
-    task genJavadocs (type: Javadoc) {
-        source = android.sourceSets.main.java.sourceFiles
-        project.android.compileSdkVersion = 'android-' + DEFAULT_COMPILE_SDK_VERSION
-
-        configurations.compileOnly.setCanBeResolved(true)
-        classpath += configurations.compileOnly
-
-        configurations.implementation.setCanBeResolved(true)
-        classpath += configurations.implementation
-
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-
-        android.libraryVariants.all { variant ->
-            if (variant.name == 'release') {
-                owner.classpath += variant.javaCompileProvider.get().classpath
+    android {
+        publishing {
+            singleVariant("release") {
+                withSourcesJar()
+                withJavadocJar()
             }
         }
-//        include javaDocsAllowList
     }
 
-    task sourceJar(type: Jar) {
-        classifier = 'source'
-        from android.sourceSets.main.java.sourceFiles
-    }
-
-    task javadocJar(type: Jar, dependsOn: genJavadocs) {
-        classifier = 'javadoc'
-        from genJavadocs.destinationDir
-    }
+//    task genJavadocs (type: Javadoc) {
+//        source = android.sourceSets.main.java.sourceFiles
+//        project.android.compileSdkVersion = 'android-' + DEFAULT_COMPILE_SDK_VERSION
+//
+//        configurations.compileOnly.setCanBeResolved(true)
+//        classpath += configurations.compileOnly
+//
+//        configurations.implementation.setCanBeResolved(true)
+//        classpath += configurations.implementation
+//
+//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//
+//        android.libraryVariants.all { variant ->
+//            if (variant.name == 'release') {
+//                owner.classpath += variant.javaCompileProvider.get().classpath
+//            }
+//        }
+////        include javaDocsAllowList
+//    }
+//
+//    task sourceJar(type: Jar) {
+//        classifier = 'source'
+//        from android.sourceSets.main.java.sourceFiles
+//    }
+//
+//    task javadocJar(type: Jar, dependsOn: genJavadocs) {
+//        classifier = 'javadoc'
+//        from genJavadocs.destinationDir
+//    }
 
     def artifactVersion = ARTIFACT_VERSION
     def projectURL = findProperty("url")
@@ -68,15 +77,15 @@ subprojects {
             publications {
                 release(MavenPublication) {
                     groupId = groupID
-                        artifactId = "driver-$project.name"
-                        version artifactVersion
-                        artifact sourceJar
-                        artifact javadocJar
-                        if (project.plugins.findPlugin("com.android.library")) {
-                            from components.release
-                        } else {
-                            artifact("$buildDir/outputs/aar/$project.name-release.aar")
-                        }
+                    artifactId = "driver-$project.name"
+                    version artifactVersion
+//                        artifact sourceJar
+//                        artifact javadocJar
+                    if (project.plugins.findPlugin("com.android.library")) {
+                        from components.release
+                    } else {
+                        artifact("$buildDir/outputs/aar/$project.name-release.aar")
+                    }
                     pom {
                         name = "driver-$project.name"
                             description = "driver-$project.name"
