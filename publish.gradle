@@ -42,47 +42,49 @@ subprojects {
     group = groupID
     version = artifactVersion
 
-    afterEvaluate.publishing {
-        publications {
-            release(MavenPublication) {
-                groupId = groupID
-                artifactId = "driver-$project.name"
-                version artifactVersion
-                if (project.plugins.findPlugin("com.android.library")) {
-                    from components.release
-                } else {
-                    artifact("$buildDir/outputs/aar/$project.name-release.aar")
-                }
-                pom {
-                    name = "driver-$project.name"
-                        description = "driver-$project.name"
-                        url = projectURL
-                        licenses {
-                            license {
-                                name = 'The Apache License, Version 2.0'
-                                url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+    afterEvaluate {
+        publishing {
+            publications {
+                release(MavenPublication) {
+                    groupId = groupID
+                    artifactId = "driver-$project.name"
+                    version artifactVersion
+                    if (project.plugins.findPlugin("com.android.library")) {
+                        from components.release
+                    } else {
+                        artifact("$buildDir/outputs/aar/$project.name-release.aar")
+                    }
+                    pom {
+                        name = "driver-$project.name"
+                            description = "driver-$project.name"
+                            url = projectURL
+                            licenses {
+                                license {
+                                    name = 'The Apache License, Version 2.0'
+                                    url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                                }
+                            }
+                        developers {
+                            developer {
+                                id = "luke.go"
+                                name = "Luke Go"
+                                email = "sangch.go@gmail.com"
                             }
                         }
-                    developers {
-                        developer {
-                            id = "luke.go"
-                            name = "Luke Go"
-                            email = "sangch.go@gmail.com"
+                        scm {
+                            url = projectURL
+                            connection = "scm:${projectURL}.git"
+                            developerConnection = "scm:${projectURL}.git"
                         }
-                    }
-                    scm {
-                        url = projectURL
-                        connection = "scm:${projectURL}.git"
-                        developerConnection = "scm:${projectURL}.git"
                     }
                 }
             }
-        }
-        signing {
-            def signingKey = findProperty("signingKey")
-            def signingPassword = findProperty("signingPassword")
-            useInMemoryPgpKeys(signingKey, signingPassword)
-            sign publishing.publications
+            signing {
+                def signingKey = findProperty("signingKey")
+                def signingPassword = findProperty("signingPassword")
+                useInMemoryPgpKeys(signingKey, signingPassword)
+                sign publishing.publications
+            }
         }
     }
 }
