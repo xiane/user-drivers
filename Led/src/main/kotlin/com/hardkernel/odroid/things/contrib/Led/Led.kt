@@ -27,8 +27,8 @@ import java.io.IOException
 @Suppress("unused", "WeakerAccess")
 class Led
 /**
-Get a gpio instance and set the direction.
-@param pinName target gpio pin name to use Led.
+ * Get a gpio instance and set the direction.
+ * @param pinName target gpio pin name to use Led.
  */
 @Throws(IOException::class) constructor(pinName: String) : AutoCloseable {
     private var pin: Gpio? = null
@@ -40,8 +40,8 @@ Get a gpio instance and set the direction.
     }
 
     /**
-     Turn on when true, and turn off when false.
-     @param on On/Off state. true is on.
+     * Turn on when true, and turn off when false.
+     * @param on On/Off state. true is on.
      */
     @Throws(Exception::class)
     fun turn(on: Boolean) {
@@ -49,7 +49,7 @@ Get a gpio instance and set the direction.
     }
 
     /**
-     auto close the gpio pin.
+     * Auto close the gpio pin.
      */
     @Throws(IOException::class)
     override fun close() {
