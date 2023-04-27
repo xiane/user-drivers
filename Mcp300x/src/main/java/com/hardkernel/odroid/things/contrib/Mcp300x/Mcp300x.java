@@ -76,10 +76,11 @@ public class Mcp300x implements AutoCloseable {
         byte[] message = new byte[3];
         message[0] = 0x01;
         message[1] = (byte) ((adcMode? 0x80 : 0x00) | ((byte)(channel & 0x07) << 4));
+        message[2] = 0x00;
 
         device.transfer(message, message, 3);
 
-        return (message[1] | 0x03) << 8 | message[2] & 0xFF;
+        return ((message[1] & 0x03) << 8) | (message[2] & 0xFF);
     }
 
     /**
