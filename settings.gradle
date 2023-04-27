@@ -1,7 +1,7 @@
-include ':Bme280'
 include ':Eeprom'
 include ':Lcd'
 include ':Mcp2515'
+include ':Mcp300x'
 include ':RotaryEncoder'
 include ':Si1132'
 include ':WeatherBoard'

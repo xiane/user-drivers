@@ -1,4 +1,4 @@
-package com.hardkernel.odroid.things.contrib.Bme280;
+package com.hardkernel.odroid.things.contrib.Mcp300x;
 
 import org.junit.Test;
 
