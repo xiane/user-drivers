@@ -40,10 +40,12 @@ Driver | Target | Usage | Note |
 :---:|:---: | --- | --- |
 [driver-Eeprom](Eeprom) | AT24C EEPROM Driver | `implementation 'com.hardkernel:driver-Eeprom:0.5.1'` | [sample](https://github.com/xiane/thingsGpioExample/tree/examples/Lcd)
 [driver-Lcd](Lcd) | Lcd Character Display | `implementation 'com.hardkernel:driver-Lcd:0.5'` | [sample](https://github.com/xiane/thingsGpioExample/tree/examples/Lcd)
+[driver-Led](Led) | Led Control over GPIO | `implementation 'com.hardkernel:driver-Led:0.5'` | [sample](https://github.com/xiane/thingsGpioExample/tree/examples/Led)
 [driver-Mcp2515](Mcp2515) | CAN Bus Driver | `implementation 'com.hardkernel:driver-Mcp2515:0.5.1'` | [sample](https://github.com/xiane/thingsGpioExample/tree/examples/Mcp2515)
 [driver-Mcp300x](Mcp300x) | ADC Convertor Driver| `implementation 'com.hardkernel:driver-Mcp300x:0.5.1'` | [sample](https://github.com/xiane/thingsGpioExample/tree/examples/Joystick)
 [driver-RotaryEncoder](RotaryEncoder) | Rotary Encoder Driver | `implementation 'com.hardkernel:driver-RotaryEncoder:0.6'` | [sample](https://github.com/xiane/thingsGpioExample/tree/examples/RotaryEncoderNServoMotor)
 [driver-Si1132](Si1132) | Si1132 Driver | `implementation 'com.hardkernel:driver-Si1132:0.5.1'` | [sample](https://github.com/xiane/thingsGpioExample/tree/examples/WeatherBoard)
+[driver-Ssd1306](Ssd1306) | Ssd1306 Driver | `implementation 'com.hardkernel:driver-Ssd1306:0.6.2'` | [sample](https://github.com/xiane/thingsGpioExample/tree/examples/OledNRtc)
 [driver-WeatherBoard](WeatherBoard) | Weather Board Meta Driver using Bme280 & Si1132 | `implementation 'com.hardkernel:driver-WeatherBoard:0.6.3'` | [sample](https://github.com/xiane/thingsGpioExample/tree/examples/WeatherBoard)
 
 Deprecated Drivers
