@@ -72,7 +72,7 @@ public class Ssd1306 implements Closeable {
     private static final int DATA_OFFSET = 1;
     private static final int INIT_CHARGE_PUMP = 0x8D;
     private static final int INIT_CLK_DIV = 0xD5;
-    private static final int INIT_COMSCAN_DEC = 0xC8;
+    private static final int INIT_COMSCAN_DEC = 0xC0;
     private static final int INIT_DISPLAY_NO_OFFSET = 0x0;
     private static final int INIT_DISPLAY_OFFSET = 0xD3;
     private static final int INIT_DUTY_CYCLE_1_64 = 0x3F;
@@ -99,7 +99,7 @@ public class Ssd1306 implements Closeable {
             // on, you must transmit START_LINE to present the memory-based mBuffer to the screen
             0, (byte) INIT_SET_MEMORY_ADDRESSING_MODE,
             0, (byte) INIT_MEMORY_ADDRESSING_HORIZ,
-            0, (byte) INIT_INVERSE_DISPLAY,
+            //0, (byte) INIT_INVERSE_DISPLAY,
             0, (byte) INIT_DISPLAY_OFFSET,
             0, (byte) INIT_DISPLAY_NO_OFFSET,
             0, (byte) COMMAND_DISPLAY_ON,
