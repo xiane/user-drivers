@@ -73,7 +73,6 @@ public class Ssd1306 implements Closeable {
     private static final int COMMAND_INVERSE_DISPLAY = 0xA7;
     private static final int COMMAND_COMSCAN_INC = 0xC0;
     private static final int COMMAND_COMSCAN_DEC = 0xC8;
-    private static final int COMMAND_DISPLAY_MIRROR = 0xDA;
     private static final int DATA_OFFSET = 1;
     private static final int INIT_CHARGE_PUMP = 0x8D;
     private static final int INIT_CLK_DIV = 0xD5;
@@ -82,9 +81,9 @@ public class Ssd1306 implements Closeable {
     private static final int INIT_DUTY_CYCLE_1_64 = 0x3F;
     private static final int INIT_MEMORY_ADDRESSING_HORIZ = 0x0;
     private static final int INIT_RESISTER_RATIO = 0x80;
-    private static final int INIT_SEGREMAP = 0xA1;
+    private static final int COMMAND_SEGREMAP = 0xA1;
+    private static final int COMMAND_NOSEGREMAP = 0xA0;
     private static final int INIT_SET_MEMORY_ADDRESSING_MODE = 0x20;
-    private static final int INIT_INVERSE_DISPLAY = 0xA7;
 
     private static final byte SSD1306_DISPLAY_WRITE = (byte) 0xA4;
 
@@ -93,7 +92,7 @@ public class Ssd1306 implements Closeable {
             0, (byte) COMMAND_DISPLAY_OFF,
 
             // Step 2: Set up the required communication / power settings
-            0, (byte) INIT_SEGREMAP,
+            0, (byte) COMMAND_SEGREMAP,
             0, (byte) COMMAND_COMSCAN_DEC,
             0, (byte) INIT_DUTY_CYCLE_1_64,
             0, (byte) INIT_CLK_DIV,
@@ -342,11 +341,10 @@ public class Ssd1306 implements Closeable {
         if (mI2cDevice == null) {
             throw new IllegalStateException("I2C device not open");
         }
-        mI2cDevice.writeRegByte(0,(byte) COMMAND_DISPLAY_MIRROR);
         if (on) {
-            mI2cDevice.writeRegByte(0, (byte) 0x02);
+            mI2cDevice.writeRegByte(0, (byte) COMMAND_NOSEGREMAP);
         } else {
-            mI2cDevice.writeRegByte(0, (byte) 0x12);
+            mI2cDevice.writeRegByte(0, (byte) COMMAND_SEGREMAP);
         }
     }
 
