@@ -69,10 +69,14 @@ public class Ssd1306 implements Closeable {
     private static final int COMMAND_DISPLAY_OFF = 0xAE;
     private static final int COMMAND_START_LINE = 0x40;
     private static final int COMMAND_CONTRAST_LEVEL = 0x81;
+    private static final int COMMAND_NORMAL_DISPLAY = 0xA6;
+    private static final int COMMAND_INVERSE_DISPLAY = 0xA7;
+    private static final int COMMAND_COMSCAN_INC = 0xC0;
+    private static final int COMMAND_COMSCAN_DEC = 0xC8;
+    private static final int COMMAND_DISPLAY_MIRROR = 0xDA;
     private static final int DATA_OFFSET = 1;
     private static final int INIT_CHARGE_PUMP = 0x8D;
     private static final int INIT_CLK_DIV = 0xD5;
-    private static final int INIT_COMSCAN_DEC = 0xC0;
     private static final int INIT_DISPLAY_NO_OFFSET = 0x0;
     private static final int INIT_DISPLAY_OFFSET = 0xD3;
     private static final int INIT_DUTY_CYCLE_1_64 = 0x3F;
@@ -90,7 +94,7 @@ public class Ssd1306 implements Closeable {
 
             // Step 2: Set up the required communication / power settings
             0, (byte) INIT_SEGREMAP,
-            0, (byte) INIT_COMSCAN_DEC,
+            0, (byte) COMMAND_COMSCAN_DEC,
             0, (byte) INIT_DUTY_CYCLE_1_64,
             0, (byte) INIT_CLK_DIV,
             0, (byte) INIT_RESISTER_RATIO,
@@ -99,13 +103,12 @@ public class Ssd1306 implements Closeable {
             // on, you must transmit START_LINE to present the memory-based mBuffer to the screen
             0, (byte) INIT_SET_MEMORY_ADDRESSING_MODE,
             0, (byte) INIT_MEMORY_ADDRESSING_HORIZ,
-            //0, (byte) INIT_INVERSE_DISPLAY,
+            0, (byte) COMMAND_NORMAL_DISPLAY,
             0, (byte) INIT_DISPLAY_OFFSET,
             0, (byte) INIT_DISPLAY_NO_OFFSET,
             0, (byte) COMMAND_DISPLAY_ON,
             0, (byte) INIT_CHARGE_PUMP
     };
-
 
     public enum ScrollMode {
         RightHorizontal,
@@ -290,6 +293,60 @@ public class Ssd1306 implements Closeable {
             mI2cDevice.writeRegByte(0, (byte) COMMAND_DISPLAY_ON);
         } else {
             mI2cDevice.writeRegByte(0, (byte) COMMAND_DISPLAY_OFF);
+        }
+    }
+
+    /**
+     * Display Color Inverse / Normal.
+     *
+     * @param on Set to Inverse Display color.
+     * @throws IOException
+     * @throws IllegalStateException
+     */
+    public void setDisplayInverse(boolean on) throws IOException, IllegalStateException {
+        if (mI2cDevice == null) {
+            throw new IllegalStateException("I2C device not open");
+        }
+        if (on) {
+            mI2cDevice.writeRegByte(0, (byte) COMMAND_INVERSE_DISPLAY);
+        } else {
+            mI2cDevice.writeRegByte(0, (byte) COMMAND_NORMAL_DISPLAY);
+        }
+    }
+
+    /**
+     * Flip display on/off.
+     *
+     * @param on Flip display.
+     * @throws IOException
+     * @throws IllegalStateException
+     */
+    public void setDisplayFlip(boolean on) throws IOException, IllegalStateException {
+        if (mI2cDevice == null) {
+            throw new IllegalStateException("I2C device not open");
+        }
+        if (on) {
+            mI2cDevice.writeRegByte(0, (byte) COMMAND_COMSCAN_INC);
+        } else {
+            mI2cDevice.writeRegByte(0, (byte) COMMAND_COMSCAN_DEC);
+        }
+    }
+
+    /**
+     * Mirror display on/off.
+     * @param on Mirror display.
+     * @throws IOException
+     * @throws IllegalStateException
+     */
+    public void setDisplayMirror(boolean on) throws IOException, IllegalStateException {
+        if (mI2cDevice == null) {
+            throw new IllegalStateException("I2C device not open");
+        }
+        mI2cDevice.writeRegByte(0,(byte) COMMAND_DISPLAY_MIRROR);
+        if (on) {
+            mI2cDevice.writeRegByte(0, (byte) 0x02);
+        } else {
+            mI2cDevice.writeRegByte(0, (byte) 0x12);
         }
     }
 
