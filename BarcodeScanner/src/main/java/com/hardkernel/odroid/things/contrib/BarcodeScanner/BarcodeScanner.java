@@ -40,10 +40,10 @@ public class BarcodeScanner implements AutoCloseable {
     private byte suffix = 13;
 
     /**
-     * manual scan until trigger on, stop when scanned
-     * self_activated continuous scan, delay when scanned
-     * sense detecting view change and scan same to self-activated?
-     * continuous rapid scan after scanned
+     * manual scan until trigger on, stop when scanned or trigger offed.
+     * self_activated scanning when detect the view changing. continuous scanning.
+     * sense same to self_activated.
+     * continuous rapid scan after scanned barcode.
      */
     public enum ScanMode {
         manual,
@@ -135,26 +135,47 @@ public class BarcodeScanner implements AutoCloseable {
     /**
      * Set parsing string's suffix.
      * default value is 13
-     * @param suffix
+     * @param suffix parsing suffix value.
      */
     public void setSuffix(byte suffix) {
         this.suffix = suffix;
     }
 
+    /**
+     * Reset barcode scanner. just work on the manual mode.
+     * @throws IOException
+     */
     public void reset() throws IOException {
         mReset.setValue(true);
         mReset.setValue(false);
         mTrigger.setValue(true);
     }
 
+    /**
+     * Start barcode scanning. just work on the manual mode.
+     * other mode doesn't care it.
+     * @throws IOException
+     */
     public void startScan() throws IOException {
         mTrigger.setValue(false);
     }
 
+    /**
+     * Stop barcode scanning on the manual mode.
+     * if barcode is detected on the manual mode, it is automatically called.
+     * @throws IOException
+     */
     public void stopScan() throws IOException {
         mTrigger.setValue(true);
     }
 
+    /**
+     * Set scanning mode.
+     * It just effected to the software package.
+     * You must set mode to the barcode scanner by scanning configuration barcode.
+     * @param mode target mode.
+     * @throws IOException
+     */
     public void setScanMode(ScanMode mode) throws IOException {
         mScanMode = mode;
         mTrigger.setValue(true);
