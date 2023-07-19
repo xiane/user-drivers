@@ -37,7 +37,7 @@ public class BarcodeScanner implements AutoCloseable {
     private final UartDevice barcodeLine;
 
     private byte prefix = -1;
-    private byte suffix = '\n';
+    private byte suffix = 13;
 
     /**
      * manual scan until trigger on, stop when scanned
@@ -58,7 +58,7 @@ public class BarcodeScanner implements AutoCloseable {
      * Interface definition for Barcode Listening.
      */
     public interface BarcodeListener {
-        void getBarcode(String barcodes);
+        void getBarcode(String barcode);
     }
 
     private final UartDeviceCallback callback = new UartDeviceCallback() {
