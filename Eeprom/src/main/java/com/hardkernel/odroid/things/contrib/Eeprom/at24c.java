@@ -18,10 +18,13 @@ package com.hardkernel.odroid.things.contrib.Eeprom;
 
 import static java.lang.Thread.sleep;
 
+import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.I2cDevice;
 import com.google.android.things.pio.PeripheralManager;
 
 import java.io.IOException;
+import java.lang.invoke.WrongMethodTypeException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,22 +42,23 @@ public class at24c implements AutoCloseable {
     protected byte wr_buffer_size;
 
     protected I2cDevice i2c;
+    protected List<Gpio> address_gpio = new ArrayList<>();
 
     public boolean read_only;
 
     /**
      * at24c serieas's i2c address prefix value. it must be included on the i2c address of at24c.
      */
-    public final int A_PREFIX = 0x1010000;
+    public final int A_PREFIX = 0b1010000;
 
-    public final int A000 = 0x000;
-    public final int A001 = 0x001;
-    public final int A010 = 0x010;
-    public final int A011 = 0x011;
-    public final int A100 = 0x100;
-    public final int A101 = 0x101;
-    public final int A110 = 0x110;
-    public final int A111 = 0x111;
+    public final int A000 = 0b000;
+    public final int A001 = 0b001;
+    public final int A010 = 0b010;
+    public final int A011 = 0b011;
+    public final int A100 = 0b100;
+    public final int A101 = 0b101;
+    public final int A110 = 0b110;
+    public final int A111 = 0b111;
 
     /**
      * some kind of at24c device should 16 bit address space,or two byte address words on the i2c
@@ -67,9 +71,9 @@ public class at24c implements AutoCloseable {
     public final int addr_16 = 0x10000000;
 
     /**
-     * at24c initialize with i2c bus ,i2c bus address and at24c's size.
+     * at24c initialize with i2c bus, i2c bus address and at24c's size.
      * You can create to many size of at24c based driver.
-     * but it is not yet support may type of it.
+     * but it is not yet support many type of it.
      * @param i2cBus i2c bus name on the android things.
      * @param bus_address i2c bus address of at24c series.
      * @param size device eeprom size.
@@ -80,6 +84,39 @@ public class at24c implements AutoCloseable {
         // get Peripheral Manager for managing the i2c device.
         PeripheralManager manager = PeripheralManager.getInstance();
 
+        initI2cBus(manager, i2cBus, bus_address);
+
+        byte_length = size;
+        read_only = false;
+    }
+
+    /**
+     * at24c initialize with i2c bus, address gpios, i2c bus address and at24c's size.
+     * You can create many size of at24c based driver.
+     * You should connect address pins A0, A1, A2 to GPIOs.
+     * and last 3 bits of address bit effect to the GPIOs.
+     * @param i2cBus i2c bus name on the android things.
+     * @param addressGpio gpio name string array for address pins.
+     * @param bus_address i2c bus address of at24c series.
+     * @param size device eeprom size.
+     * @throws IOException exception on android things sequence of opening a i2c.
+     */
+    public at24c (String i2cBus, String[] addressGpio, int bus_address, int size)
+        throws IOException, IllegalArgumentException {
+        // get Peripheral Manager for managing the i2c device and address GPIOs.
+        PeripheralManager manager = PeripheralManager.getInstance();
+
+        initAddressGpios(manager, addressGpio);
+        setAddressGpio(bus_address);
+        initI2cBus(manager, i2cBus, bus_address);
+
+        byte_length = size;
+        read_only = false;
+
+    }
+
+    private void initI2cBus(PeripheralManager manager, String i2cBus, int address)
+            throws IOException {
         /*
           get available i2c pin list.
           i2c name format - I2C-#, and n2/c4 have I2C-1 and I2C-2.
@@ -87,11 +124,55 @@ public class at24c implements AutoCloseable {
          */
         List<String> i2cBusList = manager.getI2cBusList();
         if(i2cBusList.contains(i2cBus))
-            i2c = manager.openI2cDevice(i2cBus, bus_address);
+            i2c = manager.openI2cDevice(i2cBus, address);
         else
-            i2c = manager.openI2cDevice(i2cBusList.get(0), bus_address);
-        byte_length = size;
-        read_only = false;
+            i2c = manager.openI2cDevice(i2cBusList.get(0), address);
+    }
+
+    private void initAddressGpios(PeripheralManager manager, String[] gpios)
+            throws IOException {
+        List<String> gpioList = manager.getGpioList();
+
+        for(int i=0; i < gpios.length; i++) {
+            if (!gpioList.contains(gpios[i]))
+                throw new IllegalArgumentException("gpio " + gpios[i] + "is not working");
+
+            Gpio gpio = manager.openGpio(gpios[i]);
+            gpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
+            address_gpio.add(i, gpio);
+        }
+    }
+
+    private void setAddressGpio(int address) throws IOException {
+        for(int i=0; i < address_gpio.size(); i++)
+            address_gpio.get(i).setValue(isHigh(address, i));
+    }
+
+    private boolean isHigh(int bus_address, int index) throws IllegalArgumentException {
+        if ((bus_address & A_PREFIX) != A_PREFIX)
+            throw new IllegalArgumentException("Wrong address");
+
+        return (bus_address & (1 << index)) != 0;
+    }
+
+    /**
+     * Change address.
+     * You must set address that be consist of A_PREFIX and target address.
+     * if address gpio is not exist, it will not work.
+     * @param address target at24c i2c bus address.
+     * @throws IOException exception on android things sequence of opening a i2c.
+     * @throws IllegalArgumentException address value is not start with A_PREX and not fit format.
+     * @throws WrongMethodTypeException address gpio is not initialized.
+     */
+    public void changeAddress(int address)
+            throws IOException, IllegalArgumentException, WrongMethodTypeException{
+        if (address_gpio.isEmpty())
+            throw new WrongMethodTypeException("you must init with address gpio");
+        String i2cBus = i2c.getName();
+        i2c.close();
+        setAddressGpio(address);
+        PeripheralManager manager = PeripheralManager.getInstance();
+        initI2cBus(manager, i2cBus, address);
     }
 
     /**
@@ -173,5 +254,9 @@ public class at24c implements AutoCloseable {
     @Override
     public void close() throws IOException {
         i2c.close();
+        if (!address_gpio.isEmpty()) {
+            for(Gpio gpio: address_gpio)
+                gpio.close();
+        }
     }
 }
