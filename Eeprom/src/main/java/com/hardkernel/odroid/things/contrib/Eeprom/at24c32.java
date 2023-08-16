@@ -33,12 +33,24 @@ public class at24c32 extends at24c {
     public at24c32(String i2cBus, int address)
             throws IOException, IllegalArgumentException {
         super(i2cBus, address, 32768/8);
-        wr_buffer_size = 32;
-        wait_time = 25;
-
         if ((address & (A_PREFIX | A111)) == 0) {
+            close();
             throw new IllegalArgumentException("Wrong address");
         }
+        wr_buffer_size = 32;
+        wait_time = 25;
+    }
+
+    public at24c32(String i2cBus, String[] addressGpios, int address)
+            throws IOException, IllegalArgumentException {
+        super(i2cBus, addressGpios, address, 32768/8);
+        if (addressGpios.length != 3) {
+            close();
+            throw new IllegalArgumentException("Address GPIOs must be three");
+        }
+
+        wr_buffer_size = 32;
+        wait_time = 25;
     }
 
     @Override
