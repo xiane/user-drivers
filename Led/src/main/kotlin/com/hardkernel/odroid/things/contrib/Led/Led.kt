@@ -49,6 +49,11 @@ class Led
     }
 
     /**
+     * Get Led state as true and false.
+     */
+    val state: Boolean? get() = pin?.value
+
+    /**
      * Auto close the gpio pin.
      */
     @Throws(IOException::class)
