@@ -16,7 +16,7 @@
 
 package com.hardkernel.odroid.things.contrib.Mcp2515;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.google.android.things.pio.Gpio;
