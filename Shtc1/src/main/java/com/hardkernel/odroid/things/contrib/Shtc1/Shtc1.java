@@ -38,13 +38,14 @@ public class Shtc1 implements AutoCloseable {
         Low
     }
 
-    private Precision precision = Precision.High;
+    protected Precision precision = Precision.High;
 
     private boolean block = true;
 
     private static final int LONG_CMD = 0x10000000;
 
     private static class CMD {
+        static final byte[] SOFTWARE_RESET = {(byte) 0x80, 0x5D};
         static byte[] HIGH_PRECISION_BLOCK = {0x7C, (byte)0xA2};
         static byte[] HIGH_PRECISION_NON_BLOCK = {0x78, 0x66};
         static byte[] LOW_PRECISION_BLOCK = {0x64, 0x58};
@@ -52,6 +53,14 @@ public class Shtc1 implements AutoCloseable {
         static final int READ_ID = LONG_CMD | 0xEFC8;
     }
 
+    private final short SHTC1_ID_MASK = 0x3F;
+    private final short SHTC1_ID_BIT = 0x7;
+
+    /**
+     * Create shtc1 instance with I2C bus.
+     * @param i2cBus Target i2c bus name.
+     * @throws IOException
+     */
     public Shtc1(String i2cBus)
             throws IOException {
         // get Peripheral Manager for managing the i2c device.
@@ -62,26 +71,52 @@ public class Shtc1 implements AutoCloseable {
             i2c = manager.openI2cDevice(i2cBus, address);
         else
             i2c = manager.openI2cDevice(i2cBusList.get(0), address);
+
+        setIdMask(SHTC1_ID_MASK, SHTC1_ID_BIT);
     }
 
+    /**
+     * Get shtc1 chip id. id[0] << 8 + id[1].
+     * @return Chip id.
+     * @throws IOException
+     */
     public short getId() throws IOException {
         byte[] ids = new byte[2];
         i2c.readRegBuffer(CMD.READ_ID, ids, 2);
         return (short) (((ids[0] & 0xff) <<8) | (ids[1] & 0xff));
     }
 
-    private final short ID_MASK = 0x3F;
-    private final short ID_BIT = 0x7;
+    private short id_mask;
+    private short id_bit;
 
+    protected void setIdMask(short mask, short id) {
+        id_mask = mask;
+        id_bit = id;
+    }
+
+    /**
+     * Check chip id from chip.
+     * @return If chip id is fit with shtc1, return true.
+     * @throws IOException
+     */
     public boolean isCorrectId() throws IOException {
         short id = getId();
-        return (id & ID_MASK) == ID_BIT;
+        return (id & id_mask) == id_bit;
     }
 
+    /**
+     * Check chip id from parameter.
+     * @return If chip id is fit with shtc1, return true.
+     * @throws IOException
+     */
     public boolean isCorrectId(short id) {
-        return (id & ID_MASK) == ID_BIT;
+        return (id & id_mask) == id_bit;
     }
 
+    /**
+     * Set target precision. High or Low.
+     * @param val Target precision.
+     */
     public void setPrecision(Precision val) {
         precision = val;
     }
@@ -100,7 +135,7 @@ public class Shtc1 implements AutoCloseable {
         return new byte[0];
     }
 
-    private int getWaitTime() {
+    protected int getWaitTime() {
         switch (precision) {
             case Low:
                 return 1;
@@ -156,6 +191,14 @@ public class Shtc1 implements AutoCloseable {
         float mid = (float)val / 65536;
 
         return mid * 100;
+    }
+
+    /**
+     * Software Reset.
+     * @throws IOException
+     */
+    public void reset() throws IOException {
+        i2c.write(CMD.SOFTWARE_RESET, 2);
     }
 
     /**
